@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenidos a mi web chat!!!.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="estilo.css">
+    <script src="/live.js"></script>
+</head>
+<body >
+    <div id="nombre-container">
+        <h3>Ingrese su nombre</h3>
+        <input type="text"  id="username" placeholder="Tu nombre"> 
+        <input type="button" class="boton" value="Aceptar" id="btnaceptar">     
+    </div>
+    <div id="chat-container">
+        <div id="chat-windows">
+            <div id="chat-mensaje"> </div>
+        </div>
+        <input disabled type="text"  id="mensaje" placeholder="Mensaje">      
+        <input disabled type="button" class="boton" value="Enviar" id="btnenviar">
+    </div>
+    <script src="/socket.io/socket.io.js" charset="utf-8"></script>
+    <script src="codigo.js" charset="utf-8"></script>
+</body>
+</html>
