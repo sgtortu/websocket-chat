@@ -12,13 +12,11 @@ socket.on('nuevaconexion', (data) => {
     console.log(data.mensaje);
 })
 
-
 let dmensaje = document.getElementById('chat-mensaje');
 let mensajeForm = document.getElementById('mensaje');
 let nombreForm = document.getElementById('username');
 let btnenviar = document.getElementById('btnenviar');
 let btnaceptar = document.getElementById('btnaceptar');
-
 
 socket.on('chat-mensaje', function (data) {
     console.log(data);
@@ -35,9 +33,7 @@ function render(data) {
 
     dmensaje.innerHTML = html;
 }
-
-
-// -- Prueba
+ 
 btnaceptar.addEventListener("click", () => {
 
     if (nombreForm.value == '') {
@@ -48,11 +44,14 @@ btnaceptar.addEventListener("click", () => {
         btnenviar.disabled = false;
         nombreForm.disabled = true;
         btnaceptar.disabled = true;
+        // Cuando alguien se une 
+        socket.emit('new-mensaje', {
+            mensaje: "se ha unido al chat",
+            usuario: nombreForm.value
+        }); 
     }
 
 })
-// --
-
 
 btnenviar.addEventListener("click", () => {
 

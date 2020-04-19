@@ -3,16 +3,39 @@ const express = require('express');
 const app = express();
 const socketIO = require('socket.io');
 
+/*Métodos:
+- listarUsuarios(): Listar usuarios conectados.
+- agregarUsuario(nombre,socket): Agregar usuario (nombre) (no se
+permite usuarios con el mismo nombre) Tope 50 usuarios.
+- borrarUsuario(socket): Quitar usuario (socket.id) (Funcion
+utilizada para administracion)
+- enviarMensaje(mensaje) Enviar Mensaje ala salda de chat
+({usuario:'usuario', mensaje:'mensaje'}) Tope 500 mensajes por sala.
+en caso de llegar al tope de mensajes borrar todos los mensajes y
+comenzar de nuevo. solo los usuarios registrados en la sala
+pueden enviar mensajes al chat.
+- typing(usuario): Enviar evento de typing (usuario)
+- obtenerMensajes() : obtiene todos los mensajes de la sala del chat.
+*/
+
 // --- Modulo --- //
 let ModuloChat = {
 
-    mensajes : [{
+    conectados: [{
+        socket_id: 1,
+        nombre: "La sala les dice"
+    }],
+    mensajes: [{
         id: 1,
         mensaje: "Bienvenidos al chat.",
         usuario: "La sala les dice"
     }],
 
-    agregarMensaje: function  (mensaje) {
+    agregarUsuario: function (usuario) {
+        this.conectados.push(usuario);
+    },
+
+    agregarMensaje: function (mensaje) {
         this.mensajes.push(mensaje);
     },
 
@@ -20,9 +43,6 @@ let ModuloChat = {
         return mensajes.length;
     }
 };
-// ---  
-let datosMensajes = ModuloChat;
-// ---
 
 
 //configuracion
@@ -37,18 +57,37 @@ const server = app.listen(app.get('port'), () => {
 
 const io = socketIO(server);
 
-
+// Cuando el cliente se conecta
 io.on("connection", (socket) => {
     console.log('Nueva conexion ' + socket.id);
 
+    // Recibir nombre del que se unio al chat
+    /* 
+    socket.on("joinUser", (data_nombre) => {
 
-    //console.log('-->', datosMensajes.mensajes);
-    socket.emit('chat-mensaje', datosMensajes.mensajes);
+        // revisar (no anda bien)
+        ModuloChat.agregarUsuario([
+            socket_id = socket.id,
+            nombre = data_nombre
+        ]);
 
+        socket.emit('chat-mensaje', [{ 
+            usuario: data_nombre,
+            mensaje: 'se ha unido al chat.'
+        }]);
+
+    }); */ 
+
+    // Enviar mensajes "viejos" para mostrar en el chat
+    socket.emit('chat-mensaje', ModuloChat.mensajes);
+
+    // Recibir mensajes del chat
     socket.on("new-mensaje", (data) => {
-        datosMensajes.agregarMensaje(data);
-        io.sockets.emit("chat-mensaje", datosMensajes.mensajes);
-        //le envio el mensaje a todoslos sockets conectados       
+        ModuloChat.agregarMensaje(data);
+
+        // Enviar mensaje para mostrar en el chat
+        io.sockets.emit("chat-mensaje", ModuloChat.mensajes);
     });
+
 
 });
