@@ -6,12 +6,14 @@ const datosUrl = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 let nombreForm = datosUrl.username;
-// Envio el username
+// Envio para un mensaje
 socket.emit('new-mensaje', {
     id: 0,
     mensaje: 'se ha unido.',
     usuario: nombreForm
 })
+// Envio el username 
+socket.emit('nuevo-usuario', {nombreForm});
 
 // let btnaceptar = document.getElementById('btnaceptar'); 
 let dmensaje = document.getElementById('chat-mensaje');
@@ -28,7 +30,7 @@ function render(data) {
     }).join(" ");
     dmensaje.innerHTML = html;
 }
-
+  
 // Escuchar mensajes y mostrarlos
 socket.on('chat-mensaje', function (data) {
     console.log(data);
