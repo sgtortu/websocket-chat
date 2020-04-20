@@ -60,25 +60,8 @@ const io = socketIO(server);
 // Cuando el cliente se conecta
 io.on("connection", (socket) => {
     console.log('Nueva conexion ' + socket.id);
-
-    // Recibir nombre del que se unio al chat
-    /* 
-    socket.on("joinUser", (data_nombre) => {
-
-        // revisar (no anda bien)
-        ModuloChat.agregarUsuario([
-            socket_id = socket.id,
-            nombre = data_nombre
-        ]);
-
-        socket.emit('chat-mensaje', [{ 
-            usuario: data_nombre,
-            mensaje: 'se ha unido al chat.'
-        }]);
-
-    }); */ 
-
-    // Enviar mensajes "viejos" para mostrar en el chat
+     
+   // Enviar mensajes "viejos" para mostrar en el chat
     socket.emit('chat-mensaje', ModuloChat.mensajes);
 
     // Recibir mensajes del chat
