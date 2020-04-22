@@ -4,14 +4,14 @@ const app = express();
 const socketIO = require('socket.io');
 const {
     agregarUsuario,
-    traerUsuariosConectados 
+    traerUsuariosConectados
 } = require('./modulos/usuarios');
 const {
     agregarMensaje,
     obtnerCantidaddeMensaje,
     obtenerMensajes
 } = require('./modulos/mensajes');
- 
+
 //configuracion
 app.set('port', process.env.PORT || 3000);
 
@@ -27,18 +27,29 @@ const io = socketIO(server);
 // Cuando el cliente se conecta
 io.on("connection", (socket) => {
     console.log('Nueva conexion ' + socket.id);
+    socket.emit('lista-conectados', traerUsuariosConectados());
 
     // Guardo datos del usuario que se conecta
     socket.on('nuevo-usuario', (data_nombre) => {
-        agregarUsuario(data_nombre.nombreForm, socket.id);
+
+        let usernames = traerUsuariosConectados();
+               
+        if (usernames.indexOf(data_nombre.nombreForm) == -1) {
+            agregarUsuario(data_nombre.nombreForm, socket.id);
+            socket.emit('aceptar-acceso', data_nombre.nombreForm);
+            socket.emit('lista-conectados', usernames);
+        } else {
+            console.log('Ya en uso -> ', data_nombre.nombreForm);
+            socket.emit('denegar-acceso', data_nombre.nombreForm);
+        }
+
     });
-    
-    // (Probando) Listar usuarios conectados
-    console.log('-->', traerUsuariosConectados());
-    socket.emit ('usuarios-conectados', traerUsuariosConectados());
+
+
+    socket.emit('lista-conectados', traerUsuariosConectados());
 
     // Enviar mensajes "viejos" para mostrar en el chat
-    socket.emit('chat-mensaje', obtenerMensajes());
+    socket.emit('chat-mensaje', obtenerMensajes()); 
 
     // Recibir mensajes del chat
     socket.on("new-mensaje", (data) => {

@@ -1,24 +1,50 @@
 const socket = io();
-
-// Cuando se conecta un usuario
+ 
 // Obtener el username desde la URL
 const datosUrl = Qs.parse(location.search, {
     ignoreQueryPrefix: true
 });
 let nombreForm = datosUrl.username;
-// Envio para un mensaje
-socket.emit('new-mensaje', {
-    id: 0,
-    mensaje: 'se ha unido.',
-    usuario: nombreForm
-})
+
 // Envio el username 
 socket.emit('nuevo-usuario', {nombreForm});
 
-// let btnaceptar = document.getElementById('btnaceptar'); 
+// Envio para un mensaje
+socket.on ('aceptar-acceso', function(nombre){
+    socket.emit('new-mensaje', {
+        id: 0,
+        mensaje: 'se ha unido.',
+        usuario: nombre
+    }) 
+})
+    
+// Recibir usuarios conectados
+socket.on ('lista-conectados', function (usernames) {
+    renderConectados(usernames);
+})
+// Username en uso, denegar acceso
+socket.on ('denegar-acceso', function (username) {
+    alert(username + " ya esta en uso.");
+    return (`<div> 
+    <em>${document.location.href="/"}</em>
+  </div>`);
+})
+
+let listaConectados = document.getElementById('lista-conectados'); 
 let dmensaje = document.getElementById('chat-mensaje');
 let mensajeForm = document.getElementById('mensaje');
 let btnenviar = document.getElementById('btnenviar');
+
+
+// Funcion para renderizar un conectados
+function renderConectados(data) {
+    var html = data.map(function (elem, index) {
+        return (`<div> 
+                <em>${elem}</em>
+              </div>`);
+    }).join(" ");
+    listaConectados.innerHTML = html;
+}
 
 // Funcion para renderizar un mensaje
 function render(data) {
