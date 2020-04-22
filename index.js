@@ -4,7 +4,7 @@ const app = express();
 const socketIO = require('socket.io');
 const {
     agregarUsuario,
-    traerUsuariosConectados,
+    listarUsuarios,
     sacarUsuario
 } = require('./modulos/usuarios');
 const {
@@ -33,8 +33,8 @@ io.on("connection", (socket) => {
     // Guardo datos del usuario que se conecta
     socket.on('nuevo-usuario', (data_nombre) => {
 
-        socket.emit('lista-conectados', traerUsuariosConectados());
-        let usernames = traerUsuariosConectados();
+        socket.emit('lista-conectados', listarUsuarios());
+        let usernames = listarUsuarios();
 
         console.log('usernames.length', usernames.length);
         // Denegar acceso porque hay 50 usuarios
@@ -45,16 +45,12 @@ io.on("connection", (socket) => {
             if (usernames.indexOf(data_nombre.nombreForm) == -1) {
                 agregarUsuario(data_nombre.nombreForm, socket.id);
                 socket.emit('aceptar-acceso', data_nombre.nombreForm);
-                io.sockets.emit('lista-conectados', traerUsuariosConectados());
+                io.sockets.emit('lista-conectados', listarUsuarios());
             } else {
                 console.log('Ya en uso -> ', data_nombre.nombreForm);
                 socket.emit('denegar-acceso', data_nombre.nombreForm);
             }
         }
-
-
-
-
     });
 
     // Cuando alguien se desconecta 
@@ -68,7 +64,7 @@ io.on("connection", (socket) => {
                 usuario: user.username
             })
             io.sockets.emit('chat-mensaje', obtenerMensajes());
-            io.sockets.emit('lista-conectados', traerUsuariosConectados());
+            io.sockets.emit('lista-conectados', listarUsuarios());
         }
     });
 

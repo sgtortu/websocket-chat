@@ -7,7 +7,7 @@ function agregarUsuario(username, socket_id) {
 }
 
 // Usuarios conectados (probando)
-function traerUsuariosConectados() {
+function listarUsuarios() {
   let usernames = []; 
   conectados.map(function (elem, index) {
     usernames.push(elem.username);
@@ -15,7 +15,7 @@ function traerUsuariosConectados() {
   return usernames;
 }
 
- // Cuando un usuario sale
+ // Cuando un usuario sale del chat
 function sacarUsuario(id) {
   const index = conectados.findIndex(username => username.socket_id === id);
 
@@ -23,9 +23,20 @@ function sacarUsuario(id) {
     return conectados.splice(index, 1)[0];
   }
 }
- 
+
+// Borrar usuario (desde administracion)
+function eliminarUsuario(nombre) {
+  const index = conectados.findIndex(username => username.username === nombre);
+
+  if (index !== -1) {
+    return conectados.splice(index, 1)[0];
+  }
+}
+
+
+
 module.exports = {
   agregarUsuario,
-  traerUsuariosConectados,
-  sacarUsuario 
+  listarUsuarios,
+  sacarUsuario
 };

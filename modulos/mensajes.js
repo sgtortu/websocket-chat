@@ -1,19 +1,19 @@
-const mensajes = []; 
+const listMensaje = []; 
 
 function agregarMensaje(mensaje) {
-    mensajes.push(mensaje);
+    listMensaje.push(mensaje);
 }
 
 function obtnerCantidaddeMensaje() {
-    return mensajes.length;
+    return listMensaje.length;
 }
 
 function obtenerMensajes() {
-    return mensajes;
+    return listMensaje;
 }
 
 function borrarMensajes() { 
-    mensajes.splice(0, mensajes.length);
+    listMensaje.splice(0, listMensaje.length);
 } 
 
 module.exports = {
