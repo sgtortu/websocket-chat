@@ -90,4 +90,9 @@ io.on("connection", (socket) => {
         }
     });
 
+    // Usuario escribiendo
+    socket.on('esta-escribiendo', (data)=>{
+        socket.broadcast.emit('esta-escribiendo', data);
+    })
+
 });

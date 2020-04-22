@@ -12,6 +12,12 @@ body {
     box-shadow:1px 3px 5px rgba(0,0,0,0.5);
 }
 
+#esta-escribiendo {
+    padding: 14px 0;
+    margin: 0 20px;
+    color: #666;
+}
+
 #conec{
     background:#575dd8;
     color: #fff;
