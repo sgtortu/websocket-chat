@@ -24,11 +24,20 @@ socket.on ('lista-conectados', function (usernames) {
 })
 // Username en uso, denegar acceso
 socket.on ('denegar-acceso', function (username) {
-    alert(username + " ya esta en uso.");
-    return (`<div> 
-    <em>${document.location.href="/"}</em>
-  </div>`);
+    renderDenegar(username , " ya esta en uso.") 
 })
+// Chat lleno, denegar acceso
+socket.on ('denegar-acceso-50-usuarios', function (username) {
+    renderDenegar (username , " el chat esta lleno.");
+ 
+
+})
+function renderDenegar(username, mensaje) {
+    alert(username + mensaje);
+    return document.location.href="/" ;
+}
+
+
 
 let listaConectados = document.getElementById('lista-conectados'); 
 let dmensaje = document.getElementById('chat-mensaje');

@@ -23,9 +23,9 @@ function sacarUsuario(id) {
     return conectados.splice(index, 1)[0];
   }
 }
-
+ 
 module.exports = {
   agregarUsuario,
   traerUsuariosConectados,
-  sacarUsuario
+  sacarUsuario 
 };

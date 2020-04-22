@@ -36,21 +36,31 @@ io.on("connection", (socket) => {
         socket.emit('lista-conectados', traerUsuariosConectados());
         let usernames = traerUsuariosConectados();
 
-        if (usernames.indexOf(data_nombre.nombreForm) == -1) {
-            agregarUsuario(data_nombre.nombreForm, socket.id);
-            socket.emit('aceptar-acceso', data_nombre.nombreForm);
-            io.sockets.emit('lista-conectados', traerUsuariosConectados());
+        console.log('usernames.length', usernames.length);
+        // Denegar acceso porque hay 50 usuarios
+        if (usernames.length == 6) {
+            socket.emit('denegar-acceso-50-usuarios', data_nombre.nombreForm);
         } else {
-            console.log('Ya en uso -> ', data_nombre.nombreForm);
-            socket.emit('denegar-acceso', data_nombre.nombreForm);
+            // Denegar acceso por usuario existente
+            if (usernames.indexOf(data_nombre.nombreForm) == -1) {
+                agregarUsuario(data_nombre.nombreForm, socket.id);
+                socket.emit('aceptar-acceso', data_nombre.nombreForm);
+                io.sockets.emit('lista-conectados', traerUsuariosConectados());
+            } else {
+                console.log('Ya en uso -> ', data_nombre.nombreForm);
+                socket.emit('denegar-acceso', data_nombre.nombreForm);
+            }
         }
+
+
+
 
     });
 
     // Cuando alguien se desconecta 
     socket.on('disconnect', () => {
         const user = sacarUsuario(socket.id);
-        if (user){
+        if (user) {
             console.log('user.username--->', user.username)
             agregarMensaje({
                 id: 0,
@@ -75,11 +85,9 @@ io.on("connection", (socket) => {
 
         // Borrar mensajes si llegan a 500
         let todosMensajes = obtnerCantidaddeMensaje();
-        if (todosMensajes == 5) {
+        if (todosMensajes == 500) {
             borrarMensajes();
         }
-        });
-
-
+    });
 
 });
