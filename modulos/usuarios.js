@@ -15,7 +15,17 @@ function traerUsuariosConectados() {
   return usernames;
 }
 
+ // Cuando un usuario sale
+function sacarUsuario(id) {
+  const index = conectados.findIndex(username => username.socket_id === id);
+
+  if (index !== -1) {
+    return conectados.splice(index, 1)[0];
+  }
+}
+
 module.exports = {
   agregarUsuario,
-  traerUsuariosConectados 
+  traerUsuariosConectados,
+  sacarUsuario
 };
