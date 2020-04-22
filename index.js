@@ -10,7 +10,8 @@ const {
 const {
     agregarMensaje,
     obtnerCantidaddeMensaje,
-    obtenerMensajes
+    obtenerMensajes,
+    borrarMensajes
 } = require('./modulos/mensajes');
 
 //configuracion
@@ -71,6 +72,14 @@ io.on("connection", (socket) => {
 
         // Enviar mensaje para mostrar en el chat
         io.sockets.emit("chat-mensaje", obtenerMensajes());
-    });
+
+        // Borrar mensajes si llegan a 500
+        let todosMensajes = obtnerCantidaddeMensaje();
+        if (todosMensajes == 5) {
+            borrarMensajes();
+        }
+        });
+
+
 
 });

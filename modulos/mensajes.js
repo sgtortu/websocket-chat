@@ -12,8 +12,13 @@ function obtenerMensajes() {
     return mensajes;
 }
 
+function borrarMensajes() { 
+    mensajes.splice(0, mensajes.length);
+} 
+
 module.exports = {
     agregarMensaje,
     obtnerCantidaddeMensaje,
-    obtenerMensajes
+    obtenerMensajes,
+    borrarMensajes
 }; 
